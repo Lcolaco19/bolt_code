@@ -1,0 +1,30 @@
+#define echoPin 12 // Connect Echo to D12 pin in Arduino
+#define trigPin 11 // Connect Trigger to D11 pin in Arduino
+#define buzz 13 // Buzzer connected to D13 pin of Arduino
+const int max_dist=40;// Distance between sensor and obstacle in cm
+// defines variables
+long duration; // variable for the duration of sound wave travel
+int distance; // variable for the distance measurement
+
+void setup() {
+  pinMode(buzz, OUTPUT);//Buzzer is set as an OUTPUT
+  pinMode(trigPin, OUTPUT); // Triggerpin is set as an OUTPUT
+  pinMode(echoPin, INPUT); // Echopin is set as an INPUT
+  Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
+}
+void loop() {
+  digitalWrite(trigPin, LOW);  // Clears the trigPin condition
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 15 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(15);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);  // Reads the echoPin, returns the sound wave travel time in microseconds
+  
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  Serial.print(distance);// Distance is displayed on the serial monitor and sent to bolt
+  if(distance<max_dist) //Comparing with max distance
+  digitalWrite(buzz, HIGH);//Buzzer ON
+  delay(5000);
+}
